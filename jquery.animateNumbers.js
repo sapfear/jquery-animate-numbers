@@ -14,37 +14,54 @@
     Will work in appropriate inputs
 	Inserts and accounts for commas during animation by default
     
-    https://github.com/talmand/jquery-animate-numbers
+    https://github.com/sapfear/jquery-animate-numbers
 ***********/
 
 (function($) {
-    $.fn.animateNumbers = function(stop, commas, duration, ease) {
+    $.fn.animateNumbers = function(stop, commas, duration, ease, decimalPoint, postfix, finalFormatted) {
         return this.each(function() {
             var $this = $(this);
             var isInput = $this.is('input');
-            var start = parseInt(isInput ? $this.val().replace(/,/g, "") : $this.text().replace(/,/g, ""));
+            var start = isInput ? $this.val() : $this.text()
+            if(!!decimalPoint && decimalPoint == ',')
+                start = start.replace(',', '.')
+            start = parseInt(start.replace(/,| /g, ""));
             var regex = /(\d)(?=(\d\d\d)+(?!\d))/g;
             commas = commas === undefined ? true : commas;
-            
+            commas = commas === true ? ',' : commas
+
             // number inputs can't have commas or it blanks out
             if (isInput && $this[0].type === 'number') {
                 commas = false;
             }
-            
+
+            isInput ? $this.val(Math.floor(start)) : $this.text(Math.floor(start));
+
+            var formatting = function(value){
+                var textValue = Math.floor(value) + '';
+                if (!!commas) {
+                    textValue = textValue.replace(regex, "$1" + commas);
+                }
+                if (!!postfix) {
+                    textValue += postfix;
+                }
+                return textValue;
+            };
+
             $({value: start}).animate({value: stop}, {
                 duration: duration === undefined ? 1000 : duration,
                 easing: ease === undefined ? "swing" : ease,
                 step: function() {
-                    isInput ? $this.val(Math.floor(this.value)) : $this.text(Math.floor(this.value));
-                    if (commas) {
-                        isInput ? $this.val($this.val().replace(regex, "$1,")) : $this.text($this.text().replace(regex, "$1,"));
-                    }
+                    isInput ? $this.val(formatting(this.value)) : $this.text(formatting(this.value));
                 },
                 complete: function() {
                     if (parseInt($this.text()) !== stop || parseInt($this.val()) !== stop) {
                         isInput ? $this.val(stop) : $this.text(stop);
                         if (commas) {
-                            isInput ? $this.val($this.val().replace(regex, "$1,")) : $this.text($this.text().replace(regex, "$1,"));
+                            isInput ? $this.val(formatting(this.value)) : $this.text(formatting(this.value));
+                        }
+                        if(!!finalFormatted) {
+                            isInput ? $this.val(finalFormatted) : $this.text(finalFormatted);
                         }
                     }
                 }
