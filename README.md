@@ -58,7 +58,7 @@ Most likely you will apply the plugin method to an element upon an event firing.
 Demo
 ---------------
 
-http://jsfiddle.net/JsEa6/267/
+https://jsfiddle.net/sapfear/9g19nxab/
 
 Notes
 ---------------
