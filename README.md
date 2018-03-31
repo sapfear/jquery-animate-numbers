@@ -22,6 +22,19 @@ The other extreme is to set the options to something other than the defaults.
 
 **HTML:**
 
+&lt;div id="num"&gt;1 234,03 $&lt;/div&gt;
+
+**JS:**
+
+$("#num").animateNumbers(31455.44, ' ', 1000, 'swing', ',', ' $','31 455,44 $')
+
+In this example the div #num will be animated from 1 234,03 р. to 31 455,44 р.; one second, with commas, swing ease, 
+commas like spaces, decimal point is ',', added $ in end and has final string
+
+The other extreme is to set the options to something other than the defaults.
+
+**HTML:**
+
 &lt;div id="num"&gt;1234&lt;/div&gt;
 
 **JS:**
